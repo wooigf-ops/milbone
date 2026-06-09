@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2026 월드컵 계모임 ⚽</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #C60C30;
+  --red-dark: #9a0a26;
+  --gold: #FFD700;
+  --silver: #C0C0C0;
+  --bronze: #CD7F32;
+  --bg: #f0f2f5;
+  --white: #ffffff;
+  --text: #1a1a1a;
+  --text-light: #888;
+  --border: #e0e0e0;
+  --success: #22c55e;
+  --success-bg: #dcfce7;
+  --warn-bg: #fefce8;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, var(--red) 0%, #8B0000 100%);
+  color: white;
+  padding: 18px 16px 14px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+}
+.header h1 { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; }
+.header .sub { font-size: 0.8rem; opacity: 0.85; margin-top: 4px; }
+.total-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  margin-left: 6px;
+}
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  display: flex;
+  border-top: 1px solid var(--border);
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-item {
+  flex: 1;
+  padding: 10px 4px 8px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 0.7rem;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-item .icon { font-size: 1.4rem; display: block; line-height: 1.3; }
+.nav-item.active { color: var(--red); font-weight: 700; }
+
+/* ── Content ── */
+.content { max-width: 680px; margin: 0 auto; padding: 14px 14px 0; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Cards ── */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Leaderboard ── */
+.lb-row {
+  display: flex;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.lb-row:last-child { border-bottom: none; }
+.rank-bubble {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.r1 { background: var(--gold); color: #6b4000; }
+.r2 { background: var(--silver); color: #444; }
+.r3 { background: var(--bronze); color: white; }
+.rN { background: #eee; color: var(--text-light); font-weight: 600; }
+.lb-name { flex: 1; font-weight: 600; font-size: 0.95rem; }
+.lb-detail { text-align: right; }
+.lb-amount { font-weight: 800; color: var(--red); font-size: 1rem; }
+.lb-note { font-size: 0.72rem; color: var(--text-light); margin-top: 1px; }
+
+/* ── Match Cards ── */
+.match-card {
+  background: white;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.match-card:active { transform: scale(0.98); }
+.match-card-header {
+  background: linear-gradient(90deg, #1a1a2e, #16213e);
+  color: white;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.match-teams { font-weight: 700; font-size: 1rem; }
+.match-meta { font-size: 0.75rem; opacity: 0.7; margin-top: 2px; }
+.phase-chip {
+  background: var(--red);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.match-card-body { padding: 12px 14px; }
+.result-score {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 4px;
+  margin: 6px 0;
+}
+.my-pred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+.pred-val { font-weight: 700; }
+.correct-badge {
+  background: var(--success-bg);
+  color: #15803d;
+  border: 1px solid var(--success);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.enter-btn-hint {
+  color: var(--red);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── Player Pills ── */
+.pill-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.pill {
+  padding: 6px 14px;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  background: white;
+  font-weight: 500;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill.active {
+  border-color: var(--red);
+  background: var(--red);
+  color: white;
+  font-weight: 700;
+}
+
+/* ── Tournament ── */
+.t-card {
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.t-card-header {
+  background: linear-gradient(90deg, #1a1a2e, #16213e);
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.t-card-title { font-weight: 700; }
+.prize-chip {
+  background: var(--gold);
+  color: #6b4000;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.t-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.t-cell {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.t-cell:nth-child(even) { border-right: none; }
+.t-cell-name { font-weight: 600; color: var(--text-light); font-size: 0.75rem; margin-bottom: 2px; }
+.t-cell-val { font-weight: 700; }
+.t-cell.correct .t-cell-val { color: var(--success); }
+.t-result-bar {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.t-result-val { font-weight: 800; color: var(--red); }
+
+/* ── Forms ── */
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.form-input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: white;
+  -webkit-appearance: none;
+  color: var(--text);
+  font-family: inherit;
+}
+.form-input:focus { outline: none; border-color: var(--red); }
+.score-row { display: flex; align-items: center; gap: 10px; }
+.score-box {
+  width: 72px;
+  text-align: center;
+  padding: 12px 8px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--red);
+  font-family: inherit;
+}
+.score-box:focus { border-color: var(--red); outline: none; }
+.vs-sep { font-weight: 800; color: var(--text-light); font-size: 1.1rem; }
+
+/* ── Tag Input ── */
+.tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  min-height: 46px;
+  cursor: text;
+}
+.tags-wrap:focus-within { border-color: var(--red); }
+.tag {
+  background: var(--red);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+}
+.tag-x { cursor: pointer; opacity: 0.8; font-size: 0.85rem; line-height: 1; }
+.tag-inp {
+  border: none;
+  outline: none;
+  font-size: 0.85rem;
+  flex: 1;
+  min-width: 90px;
+  font-family: inherit;
+  color: var(--text);
+}
+.sugg-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.sugg {
+  padding: 4px 12px;
+  border: 1.5px solid var(--red);
+  color: var(--red);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  background: white;
+  font-weight: 600;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.sugg:active { background: var(--red); color: white; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-red { background: var(--red); color: white; }
+.btn-red:active { background: var(--red-dark); }
+.btn-gray { background: #eee; color: var(--text); }
+.btn-green { background: var(--success); color: white; }
+.btn-block { width: 100%; margin-top: 8px; }
+.btn-sm { padding: 6px 14px; font-size: 0.78rem; }
+
+/* ── Modal ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 200;
+  justify-content: center;
+  align-items: flex-end;
+}
+.overlay.show { display: flex; }
+.modal {
+  background: white;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 18px 32px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(60px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.modal-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+.modal-handle {
+  width: 40px; height: 4px;
+  background: #ddd;
+  border-radius: 4px;
+  margin: 0 auto 16px;
+}
+
+/* ── Settings ── */
+.settings-section { margin-bottom: 20px; }
+.setting-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.setting-row .form-input { flex: 1; }
+.match-setting-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.match-setting-item input { margin-bottom: 6px; }
+.match-act-row { display: flex; gap: 6px; }
+
+/* ── Summary chips ── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.summary-chip {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 12px;
+}
+.summary-chip .s-label { font-size: 0.72rem; color: var(--text-light); margin-bottom: 4px; }
+.summary-chip .s-val { font-size: 1rem; font-weight: 800; color: var(--red); }
+
+/* ── Result bar in match card ── */
+.result-bar {
+  background: #f8f9fa;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-light);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.result-bar strong { color: var(--text); }
+
+/* ── Admin match list ── */
+.admin-match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+.admin-match-row:last-child { border-bottom: none; }
+.admin-match-info .name { font-weight: 600; font-size: 0.9rem; }
+.admin-match-info .status { font-size: 0.75rem; color: var(--text-light); }
+.admin-match-info .status.done { color: var(--success); font-weight: 600; }
+
+/* ── Total goals closest indicator ── */
+.closest-badge {
+  background: var(--warn-bg);
+  color: #854d0e;
+  border: 1px solid #fde047;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* ── Sync Status ── */
+.sync-bar {
+  background: #1a1a2e;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  font-size: 0.72rem;
+  padding: 4px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+.sync-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sync-dot.err { background: #ef4444; }
+
+/* ── Deadline Bar ── */
+.deadline-bar {
+  background: linear-gradient(90deg, #1a1a2e, #16213e);
+  padding: 5px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.75);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.deadline-bar .dl-label { opacity: 0.65; }
+.deadline-bar .dl-val   { color: #FFD700; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+.deadline-bar .dl-lock  { color: #ff7875; }
+
+/* ── Empty State ── */
+.empty { text-align: center; padding: 36px 20px; color: var(--text-light); }
+.empty .e-icon { font-size: 3rem; margin-bottom: 10px; }
+
+/* ── Rules Page ── */
+.rule-section {
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.rule-section-header {
+  background: linear-gradient(90deg, var(--red), #8B0000);
+  color: white;
+  padding: 13px 16px;
+  font-weight: 800;
+  font-size: 0.97rem;
+}
+.rule-item {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.rule-item:last-child { border-bottom: none; }
+.rule-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--red);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.rule-main {
+  display: flex;
+  align-items: flex-start;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+.rule-note {
+  margin-left: 30px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-size: 0.8rem;
+  color: #555;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+.rule-note-icon { flex-shrink: 0; }
+
+@media (min-width: 600px) {
+  .t-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="font-size:0.72rem;font-weight:700;opacity:0.8;letter-spacing:1px;margin-bottom:4px">2026 FIFA 북중미 월드컵 친선도모 배팅게임</div>
+  <h1>⚽ 밀본 시즌.2</h1>
+  <div class="sub">
+    7명 참가
+    <span class="total-badge">총 상금 약 1,300,000원</span>
+  </div>
+</div>
+<div class="sync-bar" id="sync-bar">
+  <span class="sync-dot" id="sync-dot"></span>
+  <span id="sync-msg">서버 연결 중...</span>
+</div>
+
+<div style="background:linear-gradient(135deg,#fff8e1,#fff3cd);border-bottom:2px solid var(--gold);padding:16px 20px;text-align:center;">
+  <div style="font-size:0.92rem;font-weight:800;color:#7a5200;margin-bottom:8px;letter-spacing:0.5px">📜 개요</div>
+  <div style="font-size:0.82rem;color:#5a3e00;line-height:1.8;word-break:keep-all">
+    2026년 FIFA 북중미 월드컵을 맞이하여, 계원 간의 우의를 다지고 함께하는 즐거움을 나누고자 본 배팅게임을 진행합니다.<br>
+    경기 예측과 대회 예측에 적극적으로 참여하시어, 서로의 안목을 겨루며 뜻깊은 시간을 만들어 나가시길 바랍니다.<br>
+    <span style="font-weight:700">계원 여러분의 많은 참여와 응원을 정중히 부탁드립니다. 🙏</span>
+  </div>
+</div>
+
+<div class="content">
+  <!-- ① 순위판 -->
+  <div id="tab-rank" class="tab-content">
+    <div class="card">
+      <div class="card-title">🏆 상금 순위</div>
+      <div id="lb"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💵 게임별 상금</div>
+      <div class="summary-grid" id="prize-summary"></div>
+    </div>
+  </div>
+
+  <!-- ② 경기 예측 -->
+  <div id="tab-match" class="tab-content">
+    <div class="pill-row" id="player-pills"></div>
+    <div id="match-list"></div>
+  </div>
+
+  <!-- ③ 대회 예측 -->
+  <div id="tab-tour" class="tab-content">
+    <div id="tour-cards"></div>
+    <div class="deadline-bar" id="tour-deadline-bar" style="margin-bottom:10px"></div>
+    <button class="btn btn-red btn-block" onclick="openTourModal()">✏️ 내 대회 예측 입력/수정</button>
+
+    <!-- 48개국 조편성 -->
+    <div style="margin-top:16px">
+      <div class="card-title" style="padding:0 2px 10px;font-size:0.95rem;font-weight:800">🌍 2026 FIFA 월드컵 조편성 (48개국)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="groups-grid">
+        <!-- JS로 렌더 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 결과 입력 -->
+  <div id="tab-admin" class="tab-content">
+    <div class="card">
+      <div class="card-title">🔐 관리자 결과 입력</div>
+      <div id="admin-area">
+        <div class="form-group">
+          <label class="form-label">관리자 PIN</label>
+          <input type="password" class="form-input" id="pin-input" placeholder="PIN 입력" maxlength="12">
+          <button class="btn btn-red btn-block" onclick="checkPin()">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 규칙 -->
+  <div id="tab-rule" class="tab-content active">
+    <div class="rule-section">
+      <div class="rule-section-header">⚽ 경기 예측 (대한민국 경기)</div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">1</span>스코어 예측 — 중복 입력 가능</div>
+        <div class="rule-note"><span class="rule-note-icon">💰</span>게임당 설정금액 10만원 ÷ 맞춘 인원수 (n빵)</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">2</span>득점 선수 예측 — 한국·상대편 중복 입력 가능</div>
+        <div class="rule-note"><span class="rule-note-icon">💰</span>맞춘 인원당 30,000원 지급</div>
+        <div class="rule-note" style="margin-top:5px"><span class="rule-note-icon">⚠️</span>단, 한국·상대팀 통틀어 <strong>한 명만</strong> 입력 가능</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">3</span>예측 입력 마감</div>
+        <div class="rule-note"><span class="rule-note-icon">🔒</span>각 경기 <strong>시작 1분 전</strong>까지만 입력 가능 (한국시간 KST 기준)</div>
+      </div>
+    </div>
+
+    <div class="rule-section">
+      <div class="rule-section-header">🌍 대회 예측</div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">1</span>월드컵 우승국 — 중복 입력 가능</div>
+        <div class="rule-note"><span class="rule-note-icon">💰</span>맞춘 인원 n빵</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">2</span>최다골 선수 — 중복 입력 가능</div>
+        <div class="rule-note"><span class="rule-note-icon">💰</span>맞춘 인원 n빵</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">3</span>골 수 예측 — 중복 입력 가능</div>
+        <div class="rule-note"><span class="rule-note-icon">🔑</span><span><strong>최다골 선수를 맞춘 유저 중</strong> 골 수 예측도 <strong>정확하게 맞춘 경우에만</strong> 상금 지급</span></div>
+        <div class="rule-note" style="margin-top:5px"><span class="rule-note-icon">💰</span>해당 조건 충족 인원 n빵</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">4</span>중복 적중 시 — 해당 게임 상금 n빵 지급</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-main"><span class="rule-num">5</span>예측 입력 마감</div>
+        <div class="rule-note"><span class="rule-note-icon">🔒</span><strong>6월 28일 자정(KST)</strong>까지만 입력 가능</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ 설정 -->
+  <div id="tab-set" class="tab-content">
+    <div class="card settings-section">
+      <div class="card-title">👥 참가자 이름</div>
+      <div id="player-settings"></div>
+      <button class="btn btn-red" onclick="savePlayers()">저장</button>
+    </div>
+    <div class="card settings-section">
+      <div class="card-title">💰 게임별 상금 (원)</div>
+      <div id="prize-settings"></div>
+      <button class="btn btn-red" onclick="savePrizes()">저장</button>
+    </div>
+    <div class="card settings-section">
+      <div class="card-title">📅 경기 관리</div>
+      <div id="match-settings"></div>
+      <button class="btn btn-red btn-block" onclick="addMatch()">+ 경기 추가</button>
+    </div>
+    <div class="card settings-section">
+      <div class="card-title">🔑 관리자 PIN 변경</div>
+      <div class="setting-row">
+        <input type="password" class="form-input" id="new-pin" placeholder="새 PIN">
+        <button class="btn btn-red btn-sm" onclick="changePin()">변경</button>
+      </div>
+    </div>
+    <button class="btn btn-gray btn-block" onclick="resetAll()" style="margin-bottom:8px">🔄 전체 데이터 초기화</button>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <div class="nav-item active" onclick="go('rule',this)"><span class="icon">📋</span>규칙</div>
+  <div class="nav-item" onclick="go('rank',this)"><span class="icon">🏆</span>순위</div>
+  <div class="nav-item" onclick="go('match',this)"><span class="icon">⚽</span>경기예측</div>
+  <div class="nav-item" onclick="go('tour',this)"><span class="icon">🌍</span>대회예측</div>
+  <div class="nav-item" onclick="go('admin',this)"><span class="icon">📝</span>결과입력</div>
+  <div class="nav-item" onclick="go('set',this)"><span class="icon">⚙️</span>설정</div>
+</nav>
+
+<!-- Modal: Match Prediction -->
+<div class="overlay" id="m-match" onclick="bgClose(event,'m-match')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="m-match-title"></div>
+    <div id="m-match-body"></div>
+    <button class="btn btn-red btn-block" id="m-match-save" onclick="saveMatchPred()">저장</button>
+    <button class="btn btn-gray btn-block" onclick="closeModal('m-match')">닫기</button>
+  </div>
+</div>
+
+<!-- Modal: Tournament Prediction -->
+<div class="overlay" id="m-tour" onclick="bgClose(event,'m-tour')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🌍 대회 예측 입력</div>
+    <div id="m-tour-body"></div>
+    <button class="btn btn-red btn-block" onclick="saveTourPred()">저장</button>
+    <button class="btn btn-gray btn-block" onclick="closeModal('m-tour')">닫기</button>
+  </div>
+</div>
+
+<!-- Modal: Admin Result -->
+<div class="overlay" id="m-admin" onclick="bgClose(event,'m-admin')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="m-admin-title"></div>
+    <div id="m-admin-body"></div>
+    <button class="btn btn-green btn-block" onclick="saveAdminResult()">결과 저장</button>
+    <button class="btn btn-gray btn-block" onclick="closeModal('m-admin')">닫기</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  PLAYER DATA
+// ══════════════════════════════════════
+// 한국 2026 월드컵 최종 명단 — 골키퍼 제외 23명
+const KOR_PLAYERS = [
+  // DF
+  '김민재','설영우','조유민','이태석','박진섭','김태현','이한범','이기혁','김문환','옌스 카스트로프',
+  // MF
+  '이강인','황인범','이재성','황희찬','백승호','양현준','이동경','배준호','엄지성','김진규',
+  // FW
+  '손흥민','조규성','오현규'
+];
+
+const WC_GROUPS = [
+  { name:'A', teams:['🇲🇽 멕시코','🇿🇦 남아프리카공화국','🇰🇷 한국','🇨🇿 체코'] },
+  { name:'B', teams:['🇨🇦 캐나다','🇧🇦 보스니아헤르체고비나','🇶🇦 카타르','🇨🇭 스위스'] },
+  { name:'C', teams:['🇧🇷 브라질','🇲🇦 모로코','🏴󠁧󠁢󠁳󠁣󠁴󠁿 스코틀랜드','🇭🇹 아이티'] },
+  { name:'D', teams:['🇺🇸 미국','🇵🇾 파라과이','🇦🇺 호주','🇹🇷 터키'] },
+  { name:'E', teams:['🇩🇪 독일','🇨🇼 퀴라소','🇨🇮 코트디부아르','🇪🇨 에콰도르'] },
+  { name:'F', teams:['🇳🇱 네덜란드','🇯🇵 일본','🇸🇪 스웨덴','🇹🇳 튀니지'] },
+  { name:'G', teams:['🇧🇪 벨기에','🇪🇬 이집트','🇮🇷 이란','🇳🇿 뉴질랜드'] },
+  { name:'H', teams:['🇪🇸 스페인','🇨🇻 카보베르데','🇸🇦 사우디아라비아','🇺🇾 우루과이'] },
+  { name:'I', teams:['🇫🇷 프랑스','🇸🇳 세네갈','🇮🇶 이라크','🇳🇴 노르웨이'] },
+  { name:'J', teams:['🇦🇷 아르헨티나','🇩🇿 알제리','🇦🇹 오스트리아','🇯🇴 요르단'] },
+  { name:'K', teams:['🇵🇹 포르투갈','🇨🇩 DR콩고','🇺🇿 우즈베키스탄','🇨🇴 콜롬비아'] },
+  { name:'L', teams:['🏴󠁧󠁢󠁥󠁮󠁧󠁿 잉글랜드','🇭🇷 크로아티아','🇬🇭 가나','🇵🇦 파나마'] },
+];
+
+function renderGroups() {
+  const el = document.getElementById('groups-grid');
+  if (!el) return;
+  el.innerHTML = WC_GROUPS.map(g => `
+    <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(90deg,#1a1a2e,#16213e);color:white;padding:7px 12px;font-weight:800;font-size:0.82rem;">
+        ${g.name}조
+      </div>
+      <div style="padding:8px 12px;">
+        ${g.teams.map(t => `<div style="font-size:0.8rem;padding:3px 0;border-bottom:1px solid #f0f0f0;${t.includes('한국')?'font-weight:800;color:var(--red)':''}">${t}</div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// 상대팀 최종 명단 — 골키퍼 제외
+const TEAM_PLAYERS = {
+  '멕시코': [
+    '에드손 알바레스','세사르 몬테스','요한 바스케스','호르헤 산체스','헤수스 가야르도','마테오 차베스','이스라엘 레예스',
+    '오르벨린 피네다','루이스 차베스','알바로 피달고','루이스 로모','오베드 바르가스','에릭 리라','브라이언 구티에레스','힐베르토 모라',
+    '산티아고 히메네스','라울 히메네스','알렉시스 베가','훌리안 키뇨네스','로베르토 알바라도','세사르 우에르타','기예르모 마르티네스','아르만도 곤살레스'
+  ],
+  '남아프리카공화국': [
+    '오브리 모디바','쿨리소 무다우','은코시나티 시비시','카모겔로 세벨레벨레','브래들리 크로스','사무켈레 카비니','올웨투 마카냐','타방 마툴루디','음베케젤리 음보카지','이메 오콘','쿨루마니 은다마네',
+    '테보호 모코에나','테므바 즈와네','렐레보힐레 모포켕','오스윈 아폴리스','탈렌테 음바타','제이든 애덤스','스페펠로 시톨레',
+    '라일 포스터','에비던스 마크고파','이크람 레이너스','타펠로 마세코','체페당 모레미'
+  ],
+  '체코': [
+    '라디슬라프 크레이치','블라디미르 코우팔','토마시 홀레시','로빈 흐라나치','다비드 두데라','다비드 유라세크','스테판 찰루페크','야로슬라프 젤레니','다비드 지마',
+    '토마시 수체크','파벨 술츠','루카시 프로보트','블라디미르 다리다','미할 사딜레크','루카시 체르브','알렉산드르 소이카','데니스 비신스키','후고 소추레크',
+    '파트릭 쉬크','아담 흘로제크','얀 쿠흐타','토마시 초리','모이미르 치틸'
+  ],
+};
+
+function getOppPlayers(matchLabel) {
+  const opp = matchLabel.replace(/한국\s*vs\s*/i,'').trim();
+  return TEAM_PLAYERS[opp] || [];
+}
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+const DEFAULTS = {
+  players: ['강진욱','김태민','성상철','안형진','우상욱','이호석','최태웅'],
+  matches: [
+    { id:1, label:'한국 vs 체코',           date:'2026-06-12', time:'11:00', venue:'에스타디오 아크론 (과달라하라)', phase:'조별리그', preds:{}, result:null },
+    { id:2, label:'한국 vs 멕시코',         date:'2026-06-19', time:'10:00', venue:'에스타디오 아크론 (과달라하라)', phase:'조별리그', preds:{}, result:null },
+    { id:3, label:'한국 vs 남아프리카공화국', date:'2026-06-25', time:'10:00', venue:'에스타디오 BBVA (몬테레이)',    phase:'조별리그', preds:{}, result:null },
+  ],
+  tour: {
+    winner:     { preds:{}, result:null },
+    topScorer:  { preds:{}, result:null },
+    totalGoals: { preds:{}, result:null }
+  },
+  prizes: {
+    exactScore: 150000,
+    scorer:     30000,
+    winner:     150000,
+    topScorer:  150000,
+    totalGoals: 150000
+  },
+  pin: '2026',
+  nextId: 4
+};
+
+let S = {};
+let curPlayer = null;
+let curMatchId = null;
+let adminOpen = false;
+let adminTarget = null; // {type:'match'|'tour', id?:, key?:}
+let _saveTimer = null;
+let _lastSyncTime = null;
+
+// ── 동기화 상태 표시 ──
+function setSyncStatus(ok, msg) {
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-msg');
+  if (!dot || !txt) return;
+  dot.className = 'sync-dot' + (ok ? '' : ' err');
+  txt.textContent = msg;
+}
+
+// ── 서버에서 데이터 불러오기 ──
+async function load() {
+  try {
+    const res = await fetch('/api/state');
+    const json = await res.json();
+    const raw = json.data;
+    S = raw ? raw : JSON.parse(JSON.stringify(DEFAULTS));
+    if (!S.prizes) S.prizes = DEFAULTS.prizes;
+    if (!S.pin)    S.pin    = DEFAULTS.pin;
+    if (!S.nextId) S.nextId = DEFAULTS.nextId;
+    if (!S.tour)   S.tour   = DEFAULTS.tour;
+    _lastSyncTime = new Date();
+    setSyncStatus(true, '동기화 완료 · ' + _lastSyncTime.toLocaleTimeString('ko-KR'));
+  } catch(e) {
+    // 서버 없으면 localStorage 폴백
+    try {
+      const raw = localStorage.getItem('wc2026');
+      S = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULTS));
+      if (!S.prizes) S.prizes = DEFAULTS.prizes;
+      if (!S.pin)    S.pin    = DEFAULTS.pin;
+      if (!S.nextId) S.nextId = DEFAULTS.nextId;
+      if (!S.tour)   S.tour   = DEFAULTS.tour;
+    } catch(_) {
+      S = JSON.parse(JSON.stringify(DEFAULTS));
+    }
+    setSyncStatus(false, '서버 연결 실패 (오프라인 모드)');
+    console.warn('서버 연결 실패, localStorage 사용:', e.message);
+  }
+  // 기존 데이터에 venue/time 없으면 DEFAULTS에서 채우기 + 날짜 보정 (마이그레이션)
+  if (S.matches) {
+    S.matches.forEach(m => {
+      const def = DEFAULTS.matches.find(d => d.id === m.id);
+      if (def) {
+        if (!m.venue) m.venue = def.venue;
+        if (!m.time)  m.time  = def.time;
+        // 날짜가 구버전(하루 이른 날짜)이면 DEFAULTS 날짜로 교정
+        if (m.date !== def.date) m.date = def.date;
+      }
+    });
+  }
+  if (!curPlayer) curPlayer = S.players[0];
+}
+
+// ── 서버에 데이터 저장 ──
+function save() {
+  // 로컬 폴백
+  try { localStorage.setItem('wc2026', JSON.stringify(S)); } catch(_) {}
+
+  // 디바운스: 연속 저장 시 300ms 후 1회만 전송
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(async () => {
+    try {
+      const res = await fetch('/api/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(S)
+      });
+      const json = await res.json();
+      if (json.ok) {
+        _lastSyncTime = new Date();
+        setSyncStatus(true, '저장됨 · ' + _lastSyncTime.toLocaleTimeString('ko-KR'));
+      } else {
+        setSyncStatus(false, '저장 오류: ' + (json.error || '알 수 없음'));
+      }
+    } catch(e) {
+      setSyncStatus(false, '서버 연결 실패 (로컬에만 저장됨)');
+      console.warn('서버 저장 실패:', e.message);
+    }
+  }, 300);
+}
+
+// ── 30초마다 서버에서 최신 데이터 폴링 (다른 유저가 저장한 내용 반영) ──
+async function pollServer() {
+  try {
+    const res = await fetch('/api/state');
+    const json = await res.json();
+    if (!json.ok || !json.data) return;
+    // 현재 내가 모달을 열고 있으면 폴링 스킵 (입력 중 덮어쓰기 방지)
+    const anyOpen = document.querySelector('.overlay.show');
+    if (anyOpen) return;
+    S = json.data;
+    if (!S.prizes) S.prizes = DEFAULTS.prizes;
+    if (!S.pin)    S.pin    = DEFAULTS.pin;
+    if (!S.nextId) S.nextId = DEFAULTS.nextId;
+    if (!S.tour)   S.tour   = DEFAULTS.tour;
+    if (!S.players.includes(curPlayer)) curPlayer = S.players[0];
+    _lastSyncTime = new Date();
+    setSyncStatus(true, '동기화 완료 · ' + _lastSyncTime.toLocaleTimeString('ko-KR'));
+    // 현재 활성 탭 갱신
+    const activeTab = document.querySelector('.tab-content.active');
+    if (activeTab) render(activeTab.id.replace('tab-', ''));
+  } catch(e) {
+    setSyncStatus(false, '서버 연결 끊김');
+  }
+}
+setInterval(pollServer, 30000);
+
+// ── 카운트다운 타이머 ──
+function getMatchDeadlineMs(m) {
+  if (!m.date || !m.time) return null;
+  const [year, month, day] = m.date.split('-').map(Number);
+  const [hour, min] = m.time.split(':').map(Number);
+  return Date.UTC(year, month - 1, day, hour - 9, min, 0) - 60 * 1000;
+}
+
+const TOUR_DEADLINE_MS = Date.UTC(2026, 5, 28, 15, 0, 0); // 2026-06-28 00:00 KST = UTC 15:00 전날
+
+function isTourLocked() {
+  return Date.now() >= TOUR_DEADLINE_MS;
+}
+
+function tickDeadlines() {
+  document.querySelectorAll('.deadline-bar[data-mid]').forEach(el => {
+    const mid = parseInt(el.dataset.mid);
+    const m = S && S.matches ? S.matches.find(x => x.id === mid) : null;
+    if (!m) return;
+    const dlMs = getMatchDeadlineMs(m);
+    if (dlMs === null) return;
+    const diff = dlMs - Date.now();
+    if (diff <= 0) {
+      el.innerHTML = `<span class="dl-lock">🔒</span><span class="dl-label">입력 마감</span>`;
+    } else {
+      const totalSec = Math.floor(diff / 1000);
+      const d   = Math.floor(totalSec / 86400);
+      const h   = Math.floor((totalSec % 86400) / 3600);
+      const min = Math.floor((totalSec % 3600) / 60);
+      const sec = totalSec % 60;
+      const pad = n => String(n).padStart(2, '0');
+      const val = d > 0
+        ? `D-${d}  ${pad(h)}:${pad(min)}:${pad(sec)}`
+        : `${pad(h)}:${pad(min)}:${pad(sec)}`;
+      el.innerHTML = `<span class="dl-label">⏰ 입력기한</span><span class="dl-val">${val}</span>`;
+    }
+  });
+
+  // 대회 예측 카운트다운
+  const tourBar = document.getElementById('tour-deadline-bar');
+  if (tourBar) {
+    const diff = TOUR_DEADLINE_MS - Date.now();
+    if (diff <= 0) {
+      tourBar.innerHTML = `<span class="dl-lock">🔒</span><span class="dl-label">대회 예측 입력 마감 (6/28)</span>`;
+    } else {
+      const totalSec = Math.floor(diff / 1000);
+      const d   = Math.floor(totalSec / 86400);
+      const h   = Math.floor((totalSec % 86400) / 3600);
+      const min = Math.floor((totalSec % 3600) / 60);
+      const sec = totalSec % 60;
+      const pad = n => String(n).padStart(2, '0');
+      const val = d > 0
+        ? `D-${d}  ${pad(h)}:${pad(min)}:${pad(sec)}`
+        : `${pad(h)}:${pad(min)}:${pad(sec)}`;
+      tourBar.innerHTML = `<span class="dl-label">⏰ 대회 예측 마감 (6/28)</span><span class="dl-val">${val}</span>`;
+    }
+  }
+}
+setInterval(tickDeadlines, 1000);
+
+// ══════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════
+function go(tab, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  el.classList.add('active');
+  render(tab);
+}
+
+function render(tab) {
+  switch(tab) {
+    case 'rank':  renderRank();   break;
+    case 'match': renderMatch();  break;
+    case 'tour':  renderTour();   break;
+    case 'rule':  /* static */    break;
+    case 'admin': renderAdmin();  break;
+    case 'set':   renderSet();    break;
+  }
+}
+
+// ══════════════════════════════════════
+//  PRIZE CALC
+// ══════════════════════════════════════
+function calcPrizes() {
+  const P = {};
+  S.players.forEach(p => P[p] = 0);
+
+  // Matches
+  S.matches.forEach(m => {
+    if (!m.result) return;
+    const { hs, as, scorers, oppScorers } = m.result;
+
+    // Exact score
+    const exact = S.players.filter(p => {
+      const pr = m.preds[p];
+      return pr && pr.hs === hs && pr.as === as;
+    });
+    if (exact.length) {
+      const share = Math.floor(S.prizes.exactScore / exact.length);
+      exact.forEach(p => P[p] += share);
+    }
+
+    // Scorers per hit (Korean + opponent)
+    S.players.forEach(p => {
+      const pr = m.preds[p];
+      if (!pr) return;
+      if (pr.scorers && pr.scorers.length) {
+        const mine = pr.scorers.map(s => s.trim().toLowerCase());
+        const allResultScorers = [...(scorers||[]), ...(oppScorers||[])].map(s => s.trim().toLowerCase());
+        if (mine.some(s => allResultScorers.includes(s))) P[p] += S.prizes.scorer;
+      }
+    });
+  });
+
+  // Winner
+  if (S.tour.winner.result) {
+    const r = S.tour.winner.result.trim().toLowerCase();
+    const hit = S.players.filter(p => S.tour.winner.preds[p] && S.tour.winner.preds[p].trim().toLowerCase() === r);
+    if (hit.length) {
+      const share = Math.floor(S.prizes.winner / hit.length);
+      hit.forEach(p => P[p] += share);
+    }
+  }
+
+  // Top scorer
+  if (S.tour.topScorer.result) {
+    const r = S.tour.topScorer.result.trim().toLowerCase();
+    const hit = S.players.filter(p => S.tour.topScorer.preds[p] && S.tour.topScorer.preds[p].trim().toLowerCase() === r);
+    if (hit.length) {
+      const share = Math.floor(S.prizes.topScorer / hit.length);
+      hit.forEach(p => P[p] += share);
+    }
+  }
+
+  // Total goals — only eligible if user also correctly predicted top scorer
+  if (S.tour.totalGoals.result !== null && S.tour.topScorer.result) {
+    const actual = S.tour.totalGoals.result;
+    const tsResult = S.tour.topScorer.result.trim().toLowerCase();
+    // Filter: must have correctly predicted top scorer AND have a total goals prediction
+    const eligible = S.players.filter(p =>
+      S.tour.topScorer.preds[p] &&
+      S.tour.topScorer.preds[p].trim().toLowerCase() === tsResult &&
+      S.tour.totalGoals.preds[p] !== undefined &&
+      S.tour.totalGoals.preds[p] !== ''
+    );
+    if (eligible.length) {
+      const diffs = eligible.map(p => ({ p, diff: Math.abs(S.tour.totalGoals.preds[p] - actual) }));
+      const minD = Math.min(...diffs.map(d => d.diff));
+      const winners = diffs.filter(d => d.diff === minD);
+      const share = Math.floor(S.prizes.totalGoals / winners.length);
+      winners.forEach(({ p }) => P[p] += share);
+    }
+  }
+
+  return P;
+}
+
+// ══════════════════════════════════════
+//  RANK TAB
+// ══════════════════════════════════════
+function renderRank() {
+  const P = calcPrizes();
+  const sorted = S.players.map(p => ({ name: p, prize: P[p] })).sort((a,b) => b.prize - a.prize);
+
+  const rankClass = ['r1','r2','r3'];
+  const rankLabel = ['🥇','🥈','🥉'];
+
+  document.getElementById('lb').innerHTML = sorted.map((item, i) => {
+    const rc = i < 3 ? rankClass[i] : 'rN';
+    const rl = i < 3 ? rankLabel[i] : (i+1);
+    const matchWins = countMatchWins(item.name);
+    return `
+      <div class="lb-row">
+        <div class="rank-bubble ${rc}">${rl}</div>
+        <div class="lb-name">${item.name}</div>
+        <div class="lb-detail">
+          <div class="lb-amount">${item.prize.toLocaleString()}원</div>
+          <div class="lb-note">스코어적중 ${matchWins}회</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Summary
+  const totalPaid = Object.values(P).reduce((a,b) => a+b, 0);
+
+  document.getElementById('prize-summary').innerHTML = [
+    { icon:'⚽', label:'스코어 적중', val: S.prizes.exactScore.toLocaleString()+'원/경기' },
+    { icon:'🎯', label:'골 선수 적중', val: S.prizes.scorer.toLocaleString()+'원/명' },
+    { icon:'🌍', label:'우승국 적중', val: S.prizes.winner.toLocaleString()+'원' },
+    { icon:'👑', label:'최다골 선수', val: S.prizes.topScorer.toLocaleString()+'원' },
+    { icon:'🔢', label:'총 골 수', val: S.prizes.totalGoals.toLocaleString()+'원' },
+    { icon:'💰', label:'총 지급액', val: totalPaid.toLocaleString()+'원' },
+  ].map(x => `
+    <div class="summary-chip">
+      <div class="s-label">${x.icon} ${x.label}</div>
+      <div class="s-val">${x.val}</div>
+    </div>`).join('');
+}
+
+function countMatchWins(player) {
+  return S.matches.filter(m => {
+    if (!m.result) return false;
+    const pr = m.preds[player];
+    return pr && pr.hs === m.result.hs && pr.as === m.result.as;
+  }).length;
+}
+
+// ══════════════════════════════════════
+//  MATCH TAB
+// ══════════════════════════════════════
+function renderMatch() {
+  // Pills
+  document.getElementById('player-pills').innerHTML = S.players.map(p => `
+    <div class="pill ${p === curPlayer ? 'active' : ''}" onclick="selPlayer('${p}')">${p}</div>
+  `).join('');
+
+  if (!S.matches.length) {
+    document.getElementById('match-list').innerHTML = `<div class="empty"><div class="e-icon">⚽</div><p>경기가 없습니다.<br>설정에서 추가해주세요.</p></div>`;
+    return;
+  }
+
+  document.getElementById('match-list').innerHTML = S.matches.map(m => {
+    const pr = m.preds[curPlayer];
+    const res = m.result;
+    let predStr = pr ? `${pr.hs}:${pr.as}` : null;
+    let scorerStr = pr && pr.scorers && pr.scorers.length ? '⚽ ' + pr.scorers.join(', ') : null;
+    const isExact = res && pr && pr.hs === res.hs && pr.as === res.as;
+
+    let resHtml = '';
+    if (res) {
+      resHtml = `<div class="result-score">${res.hs} : ${res.as}</div>`;
+      if (res.scorers && res.scorers.length) {
+        resHtml += `<div class="result-bar">🇰🇷 한국: <strong>${res.scorers.join(', ')}</strong></div>`;
+      }
+      if (res.oppScorers && res.oppScorers.length) {
+        resHtml += `<div class="result-bar">🆚 상대: <strong>${res.oppScorers.join(', ')}</strong></div>`;
+      }
+    }
+
+    let predHtml = '';
+    if (predStr) {
+      predHtml = `<div class="pred-val">${predStr}</div>`;
+      if (scorerStr) predHtml += `<div style="font-size:0.75rem;color:var(--text-light);margin-top:2px">${scorerStr}</div>`;
+    } else {
+      predHtml = `<span style="color:var(--text-light)">미입력</span>`;
+    }
+
+    const timeLocked = isMatchDeadlinePassed(m);
+
+    return `
+      <div class="match-card" onclick="openMatchModal(${m.id})">
+        <div class="match-card-header">
+          <div>
+            <div class="match-teams">${m.label}</div>
+            <div class="match-meta">${fmtDate(m.date)}${m.time ? ' · ' + m.time + ' KST' : ''}${m.venue ? ' · ' + m.venue : ''}</div>
+          </div>
+          <span class="phase-chip">${m.phase}</span>
+        </div>
+        ${!res && m.date && m.time ? `<div class="deadline-bar" data-mid="${m.id}"></div>` : ''}
+        ${res ? resHtml : ''}
+        <div class="match-card-body">
+          <div class="my-pred-row">
+            <div>
+              <span style="color:var(--text-light);font-size:0.8rem">내 예측: </span>
+              ${predHtml}
+            </div>
+            <div>
+              ${isExact ? `<span class="correct-badge">🎉 스코어적중!</span>` : ''}
+              ${!res && timeLocked ? `<span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:20px;font-size:0.72rem;font-weight:700">🔒 마감</span>` : ''}
+              ${!res && !timeLocked && !pr ? `<span class="enter-btn-hint">예측 입력 →</span>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function selPlayer(p) {
+  curPlayer = p;
+  renderMatch();
+}
+
+// KST(UTC+9) 기준으로 경기 시작 1분 전이 지났는지 판단
+function isMatchDeadlinePassed(m) {
+  if (!m.date || !m.time) return false;
+  const [year, month, day] = m.date.split('-').map(Number);
+  const [hour, min] = m.time.split(':').map(Number);
+  // KST → UTC: KST - 9h
+  const matchUtcMs = Date.UTC(year, month - 1, day, hour - 9, min, 0);
+  const deadlineMs = matchUtcMs - 60 * 1000; // 1분 전
+  return Date.now() >= deadlineMs;
+}
+
+// 경기 마감 남은 시간 문자열 (KST 기준)
+function getDeadlineText(m) {
+  if (!m.date || !m.time) return null;
+  const [year, month, day] = m.date.split('-').map(Number);
+  const [hour, min] = m.time.split(':').map(Number);
+  const matchUtcMs = Date.UTC(year, month - 1, day, hour - 9, min, 0);
+  const deadlineMs = matchUtcMs - 60 * 1000;
+  const diff = deadlineMs - Date.now();
+  if (diff <= 0) return null;
+  const totalMin = Math.floor(diff / 60000);
+  if (totalMin < 60) return `마감까지 ${totalMin}분`;
+  const hrs = Math.floor(totalMin / 60);
+  const mins = totalMin % 60;
+  if (hrs < 24) return `마감까지 ${hrs}시간 ${mins}분`;
+  const days = Math.floor(hrs / 24);
+  return `마감까지 ${days}일 ${hrs % 24}시간`;
+}
+
+function openMatchModal(id) {
+  const m = S.matches.find(x => x.id === id);
+  if (!m) return;
+  curMatchId = id;
+  const pr = m.preds[curPlayer] || { hs:'', as:'', scorers:[] };
+  const resultLocked = !!m.result;
+  const timeLocked = isMatchDeadlinePassed(m);
+  const locked = resultLocked || timeLocked;
+  const oppPlayers = getOppPlayers(m.label);
+  const oppTeam = m.label.replace(/한국\s*vs\s*/i,'').trim();
+
+  document.getElementById('m-match-title').textContent = `${curPlayer} ✦ ${m.label}`;
+
+  const deadlineText = getDeadlineText(m);
+  document.getElementById('m-match-body').innerHTML = `
+    ${resultLocked ? `<div style="background:var(--warn-bg);padding:10px 12px;border-radius:10px;font-size:0.83rem;margin-bottom:14px;color:#854d0e;">⚠️ 결과가 입력된 경기입니다. 수정 불가.</div>` : ''}
+    ${timeLocked && !resultLocked ? `<div style="background:#fee2e2;padding:10px 12px;border-radius:10px;font-size:0.83rem;margin-bottom:14px;color:#991b1b;">🔒 경기 시작 1분 전이 지나 예측 입력이 마감되었습니다.</div>` : ''}
+    ${m.time||m.venue ? `<div style="background:#f0f4ff;border-radius:10px;padding:9px 13px;font-size:0.8rem;color:#334;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+      ${m.time ? `<span>🕐 ${m.time} (KST)</span>` : ''}
+      ${m.venue ? `<span>🏟️ ${m.venue}</span>` : ''}
+      ${!locked && deadlineText ? `<span style="margin-left:auto;background:var(--warn-bg);color:#854d0e;padding:2px 8px;border-radius:20px;font-size:0.72rem;font-weight:700">⏰ ${deadlineText}</span>` : ''}
+    </div>` : ''}
+    <div class="form-group">
+      <label class="form-label">스코어 예측 <span style="color:var(--text-light);font-weight:400">(한국 : 상대)</span></label>
+      <div class="score-row">
+        <input type="number" class="score-box" id="inp-hs" value="${pr.hs}" min="0" max="20" ${locked?'disabled':''}>
+        <span class="vs-sep">:</span>
+        <input type="number" class="score-box" id="inp-as" value="${pr.as}" min="0" max="20" ${locked?'disabled':''}>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">⚽ 득점 선수 예측 <span style="background:var(--warn-bg);color:#854d0e;padding:2px 8px;border-radius:20px;font-size:0.72rem;font-weight:700">30,000원</span> <span style="color:var(--red);font-size:0.72rem;font-weight:700">양팀 통틀어 1명만</span></label>
+      ${!locked ? `
+        <div style="font-size:0.75rem;font-weight:700;color:var(--text-light);margin-bottom:4px">🇰🇷 한국</div>
+        <div class="sugg-row" style="max-height:100px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px;margin-bottom:8px">${KOR_PLAYERS.map(n=>`<span class="sugg" onclick="tagAdd('${n}')">${n}</span>`).join('')}</div>
+        <div style="font-size:0.75rem;font-weight:700;color:var(--text-light);margin-bottom:4px">🆚 ${oppTeam}</div>
+        <div class="sugg-row" style="max-height:100px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px;margin-bottom:8px">${oppPlayers.map(n=>`<span class="sugg" onclick="tagAdd('${n}')">${n}</span>`).join('')}</div>
+      ` : ''}
+      <div class="tags-wrap" id="tw" onclick="tagFocus()">
+        ${(pr.scorers||[]).map(s=>`<span class="tag">${s}${!locked?`<span class="tag-x" onclick="tagRm('${s}')">×</span>`:''}</span>`).join('')}
+        ${!locked ? `<input class="tag-inp" id="ti" placeholder="직접 입력 후 Enter" onkeydown="tagKey(event)">` : ''}
+      </div>
+      <input type="hidden" id="scorer-data" value='${JSON.stringify(pr.scorers||[])}'>
+    </div>
+    ${m.result ? `
+      <div style="background:#f8f9fa;padding:12px;border-radius:10px;margin-top:4px">
+        <div style="font-weight:700;margin-bottom:6px;font-size:0.85rem">📊 실제 결과</div>
+        <div style="font-size:0.9rem">스코어: <strong>${m.result.hs} : ${m.result.as}</strong></div>
+        ${m.result.scorers&&m.result.scorers.length ? `<div style="font-size:0.9rem">🇰🇷 한국 득점자: <strong>${m.result.scorers.join(', ')}</strong></div>` : ''}
+        ${m.result.oppScorers&&m.result.oppScorers.length ? `<div style="font-size:0.9rem">🆚 상대 득점자: <strong>${m.result.oppScorers.join(', ')}</strong></div>` : ''}
+      </div>` : ''}
+  `;
+
+  document.getElementById('m-match-save').style.display = locked ? 'none' : 'block';
+  showModal('m-match');
+}
+
+// Tag helpers — Korean scorer (prediction modal)
+function tagAdd(name) {
+  const inp = document.getElementById('scorer-data');
+  let arr = JSON.parse(inp.value||'[]');
+  if (arr.length >= 1) { toast('득점 선수는 1명만 입력 가능합니다 ⚠️'); return; }
+  if (!arr.includes(name)) { arr.push(name); inp.value = JSON.stringify(arr); refreshTags(arr); }
+}
+function tagRm(name) {
+  const inp = document.getElementById('scorer-data');
+  let arr = JSON.parse(inp.value||'[]').filter(s=>s!==name);
+  inp.value = JSON.stringify(arr); refreshTags(arr);
+}
+function tagKey(e) {
+  if (e.key==='Enter'||e.key===',') {
+    e.preventDefault();
+    const v = document.getElementById('ti').value.trim();
+    if (v) { tagAdd(v); document.getElementById('ti').value=''; }
+  }
+}
+function tagFocus() { const t=document.getElementById('ti'); if(t) t.focus(); }
+function refreshTags(arr) {
+  const tw = document.getElementById('tw');
+  tw.innerHTML = arr.map(s=>`<span class="tag">${s}<span class="tag-x" onclick="tagRm('${s}')">×</span></span>`).join('')
+    + `<input class="tag-inp" id="ti" placeholder="이름 입력 후 Enter" onkeydown="tagKey(event)">`;
+}
+
+// Tag helpers — Opponent scorer (prediction modal)
+function oppTagAdd(name) {
+  const inp = document.getElementById('opp-scorer-data');
+  let arr = JSON.parse(inp.value||'[]');
+  if (arr.length >= 1) { toast('득점 선수는 1명만 입력 가능합니다 ⚠️'); return; }
+  if (!arr.includes(name)) { arr.push(name); inp.value = JSON.stringify(arr); refreshOppTags(arr); }
+}
+function oppTagRm(name) {
+  const inp = document.getElementById('opp-scorer-data');
+  let arr = JSON.parse(inp.value||'[]').filter(s=>s!==name);
+  inp.value = JSON.stringify(arr); refreshOppTags(arr);
+}
+function oppTagKey(e) {
+  if (e.key==='Enter'||e.key===',') {
+    e.preventDefault();
+    const v = document.getElementById('oti2').value.trim();
+    if (v) { oppTagAdd(v); document.getElementById('oti2').value=''; }
+  }
+}
+function oppTagFocus() { const t=document.getElementById('oti2'); if(t) t.focus(); }
+function refreshOppTags(arr) {
+  const tw = document.getElementById('otw2');
+  if (!tw) return;
+  tw.innerHTML = arr.map(s=>`<span class="tag">${s}<span class="tag-x" onclick="oppTagRm('${s}')">×</span></span>`).join('')
+    + `<input class="tag-inp" id="oti2" placeholder="이름 입력 후 Enter" onkeydown="oppTagKey(event)">`;
+}
+
+function saveMatchPred() {
+  const m = S.matches.find(x => x.id === curMatchId);
+  if (!m || m.result) return;
+  if (isMatchDeadlinePassed(m)) {
+    toast('⏰ 예측 입력 마감 시간이 지났습니다.');
+    return;
+  }
+  const hs = document.getElementById('inp-hs').value;
+  const as = document.getElementById('inp-as').value;
+  if (hs === '' || as === '') return alert('스코어를 입력해주세요.');
+  const scorers = JSON.parse(document.getElementById('scorer-data').value || '[]');
+  m.preds[curPlayer] = { hs: parseInt(hs), as: parseInt(as), scorers };
+  save();
+  closeModal('m-match');
+  renderMatch();
+  renderRank();
+  toast('저장 완료! ✅');
+}
+
+// ══════════════════════════════════════
+//  TOURNAMENT TAB
+// ══════════════════════════════════════
+function renderTour() {
+  const { winner, topScorer, totalGoals } = S.tour;
+
+  // For totalGoals, find closest
+  let tgDiffs = {};
+  if (totalGoals.result !== null) {
+    const actual = totalGoals.result;
+    S.players.filter(p => totalGoals.preds[p] !== undefined && totalGoals.preds[p] !== '').forEach(p => {
+      tgDiffs[p] = Math.abs(totalGoals.preds[p] - actual);
+    });
+  }
+  const minDiff = Object.keys(tgDiffs).length ? Math.min(...Object.values(tgDiffs)) : null;
+
+  const sections = [
+    {
+      icon:'🌍', title:'월드컵 우승국 예측', prizeKey:'winner', key:'winner', type:'text',
+      getVal: p => winner.preds[p],
+      isCorrect: p => winner.result && winner.preds[p] && winner.preds[p].trim().toLowerCase() === winner.result.trim().toLowerCase(),
+      result: winner.result, resultLabel: winner.result
+    },
+    {
+      icon:'👑', title:'최다골 선수 예측', prizeKey:'topScorer', key:'topScorer', type:'text',
+      getVal: p => topScorer.preds[p],
+      isCorrect: p => topScorer.result && topScorer.preds[p] && topScorer.preds[p].trim().toLowerCase() === topScorer.result.trim().toLowerCase(),
+      result: topScorer.result, resultLabel: topScorer.result
+    },
+    {
+      icon:'🎯', title:'총 골 수 예측 (전체 대회)', prizeKey:'totalGoals', key:'totalGoals', type:'number',
+      getVal: p => totalGoals.preds[p] !== undefined ? totalGoals.preds[p] + '골' : undefined,
+      isCorrect: p => tgDiffs[p] !== undefined && tgDiffs[p] === minDiff,
+      isClosest: p => tgDiffs[p] !== undefined && tgDiffs[p] === minDiff,
+      diff: p => tgDiffs[p],
+      result: totalGoals.result, resultLabel: totalGoals.result !== null ? totalGoals.result + '골' : null
+    }
+  ];
+
+  renderGroups();
+  document.getElementById('tour-cards').innerHTML = sections.map(sec => {
+    const cells = S.players.map(p => {
+      const val = sec.getVal(p);
+      const correct = sec.isCorrect(p);
+      const closest = sec.isClosest && sec.isClosest(p);
+      let extra = '';
+      if (sec.diff && sec.diff(p) !== undefined) {
+        extra = `<div style="font-size:0.7rem;color:var(--text-light)">오차 ${sec.diff(p)}골</div>`;
+      }
+      return `
+        <div class="t-cell ${correct ? 'correct' : ''}">
+          <div class="t-cell-name">${p}</div>
+          <div class="t-cell-val">${val || '<span style="color:var(--text-light);font-size:0.78rem">미입력</span>'}
+            ${correct ? ' 🎉' : ''}
+            ${closest && !correct ? '<span class="closest-badge">최근접</span>' : ''}
+          </div>
+          ${extra}
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="t-card">
+        <div class="t-card-header">
+          <span class="t-card-title">${sec.icon} ${sec.title}</span>
+          <span class="prize-chip">${S.prizes[sec.prizeKey].toLocaleString()}원</span>
+        </div>
+        <div class="t-grid">${cells}</div>
+        ${sec.result !== null && sec.result !== undefined ? `
+          <div class="t-result-bar">
+            <span>🏁 실제 결과</span>
+            <span class="t-result-val">${sec.resultLabel}</span>
+          </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function openTourModal() {
+  if (isTourLocked()) {
+    toast('🔒 대회 예측 입력이 마감되었습니다. (6월 28일 기준)');
+    return;
+  }
+  const { winner, topScorer, totalGoals } = S.tour;
+  const p0 = S.players[0];
+  document.getElementById('m-tour-body').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">예측할 참가자</label>
+      <select class="form-input" id="tp-sel" onchange="loadTourPreds()">
+        ${S.players.map(p=>`<option value="${p}">${p}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">🌍 월드컵 우승국 <span class="prize-chip" style="font-size:0.72rem">${S.prizes.winner.toLocaleString()}원</span></label>
+      <input type="text" class="form-input" id="tp-winner" placeholder="예: 브라질, 독일, 한국">
+    </div>
+    <div class="form-group">
+      <label class="form-label">👑 최다골 선수 <span class="prize-chip" style="font-size:0.72rem">${S.prizes.topScorer.toLocaleString()}원</span></label>
+      <input type="text" class="form-input" id="tp-ts" placeholder="예: 손흥민, 음바페, 홀란드">
+    </div>
+    <div class="form-group">
+      <label class="form-label">🎯 총 골 수 (대회 전체) <span class="prize-chip" style="font-size:0.72rem">${S.prizes.totalGoals.toLocaleString()}원</span></label>
+      <input type="number" class="form-input" id="tp-tg" placeholder="예: 155" min="0">
+    </div>
+  `;
+  loadTourPreds();
+  showModal('m-tour');
+}
+
+function loadTourPreds() {
+  const p = document.getElementById('tp-sel').value;
+  const { winner, topScorer, totalGoals } = S.tour;
+  document.getElementById('tp-winner').value = winner.preds[p] || '';
+  document.getElementById('tp-ts').value = topScorer.preds[p] || '';
+  document.getElementById('tp-tg').value = (totalGoals.preds[p] !== undefined && totalGoals.preds[p] !== '') ? totalGoals.preds[p] : '';
+}
+
+function saveTourPred() {
+  const p = document.getElementById('tp-sel').value;
+  const w = document.getElementById('tp-winner').value.trim();
+  const ts = document.getElementById('tp-ts').value.trim();
+  const tg = document.getElementById('tp-tg').value;
+  if (w) S.tour.winner.preds[p] = w;
+  if (ts) S.tour.topScorer.preds[p] = ts;
+  if (tg !== '') S.tour.totalGoals.preds[p] = parseInt(tg);
+  save();
+  closeModal('m-tour');
+  renderTour();
+  renderRank();
+  toast('저장 완료! ✅');
+}
+
+// ══════════════════════════════════════
+//  ADMIN TAB
+// ══════════════════════════════════════
+function checkPin() {
+  const v = document.getElementById('pin-input').value;
+  if (v === S.pin) {
+    adminOpen = true;
+    renderAdminPanel();
+  } else {
+    alert('PIN이 틀렸습니다.');
+  }
+}
+
+function renderAdmin() {
+  if (adminOpen) renderAdminPanel();
+  else {
+    document.getElementById('admin-area').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">관리자 PIN (기본: 2026)</label>
+        <input type="password" class="form-input" id="pin-input" placeholder="PIN 입력" maxlength="12">
+        <button class="btn btn-red btn-block" onclick="checkPin()">확인</button>
+      </div>`;
+  }
+}
+
+function renderAdminPanel() {
+  const matchRows = S.matches.map(m => `
+    <div class="admin-match-row">
+      <div class="admin-match-info">
+        <div class="name">${m.label}</div>
+        <div class="status ${m.result ? 'done' : ''}">
+          ${m.result ? `✅ 결과: ${m.result.hs}:${m.result.as}` : '⏳ 결과 미입력'}
+        </div>
+      </div>
+      <button class="btn btn-${m.result?'gray':'red'} btn-sm" onclick="openAdminMatch(${m.id})">
+        ${m.result?'수정':'입력'}
+      </button>
+    </div>`).join('');
+
+  const { winner, topScorer, totalGoals } = S.tour;
+
+  document.getElementById('admin-area').innerHTML = `
+    <div style="color:var(--success);font-weight:700;margin-bottom:14px">✅ 관리자 모드 활성화</div>
+
+    <div style="font-weight:700;margin-bottom:10px">⚽ 경기 결과</div>
+    ${matchRows || '<p style="color:var(--text-light);font-size:0.85rem">경기 없음</p>'}
+
+    <div style="font-weight:700;margin:16px 0 10px">🌍 대회 결과</div>
+    <div style="display:grid;gap:8px">
+      ${[
+        { label:'🌍 월드컵 우승국', key:'winner', val: winner.result },
+        { label:'👑 최다골 선수',   key:'topScorer', val: topScorer.result },
+        { label:'🎯 총 골 수',      key:'totalGoals', val: totalGoals.result !== null ? totalGoals.result + '골' : null },
+      ].map(x=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg);border-radius:10px;">
+          <div>
+            <div style="font-weight:600;font-size:0.88rem">${x.label}</div>
+            ${x.val ? `<div style="color:var(--success);font-size:0.8rem;font-weight:600">${x.val}</div>` : `<div style="color:var(--text-light);font-size:0.78rem">미입력</div>`}
+          </div>
+          <button class="btn btn-${x.val?'gray':'red'} btn-sm" onclick="openAdminTour('${x.key}')">입력</button>
+        </div>`).join('')}
+    </div>
+    <button class="btn btn-gray btn-block" onclick="adminOpen=false;renderAdmin()" style="margin-top:16px">🔒 잠금</button>
+  `;
+}
+
+// Admin tag helpers — Korean result scorers
+let _adminScorers = [];
+function adminTagAdd(name) {
+  if (!_adminScorers.includes(name)) { _adminScorers.push(name); refreshAdminTags(); }
+}
+function adminTagRm(name) {
+  _adminScorers = _adminScorers.filter(s=>s!==name); refreshAdminTags();
+}
+function adminTagKey(e) {
+  if (e.key==='Enter') { e.preventDefault(); const v = document.getElementById('ati').value.trim(); if (v) { adminTagAdd(v); document.getElementById('ati').value=''; } }
+}
+function adminTagFocus() { const t=document.getElementById('ati'); if(t) t.focus(); }
+function refreshAdminTags() {
+  const tw = document.getElementById('atw');
+  if (!tw) return;
+  tw.innerHTML = _adminScorers.map(s=>`<span class="tag">${s}<span class="tag-x" onclick="adminTagRm('${s}')">×</span></span>`).join('')
+    + `<input class="tag-inp" id="ati" placeholder="선수명 후 Enter" onkeydown="adminTagKey(event)">`;
+}
+
+// Admin tag helpers — Opponent result scorers
+let _adminOppScorers = [];
+function adminOppTagAdd(name) {
+  if (!_adminOppScorers.includes(name)) { _adminOppScorers.push(name); refreshAdminOppTags(); }
+}
+function adminOppTagRm(name) {
+  _adminOppScorers = _adminOppScorers.filter(s=>s!==name); refreshAdminOppTags();
+}
+function adminOppTagKey(e) {
+  if (e.key==='Enter') { e.preventDefault(); const v = document.getElementById('atoi').value.trim(); if (v) { adminOppTagAdd(v); document.getElementById('atoi').value=''; } }
+}
+function adminOppTagFocus() { const t=document.getElementById('atoi'); if(t) t.focus(); }
+function refreshAdminOppTags() {
+  const tw = document.getElementById('atow');
+  if (!tw) return;
+  tw.innerHTML = _adminOppScorers.map(s=>`<span class="tag">${s}<span class="tag-x" onclick="adminOppTagRm('${s}')">×</span></span>`).join('')
+    + `<input class="tag-inp" id="atoi" placeholder="선수명 후 Enter" onkeydown="adminOppTagKey(event)">`;
+}
+
+function openAdminMatch(id) {
+  const m = S.matches.find(x => x.id === id);
+  if (!m) return;
+  adminTarget = { type: 'match', id };
+  _adminScorers = (m.result && m.result.scorers) ? [...m.result.scorers] : [];
+  _adminOppScorers = (m.result && m.result.oppScorers) ? [...m.result.oppScorers] : [];
+  const res = m.result || {};
+  const oppPlayers = getOppPlayers(m.label);
+  const oppTeam = m.label.replace(/한국\s*vs\s*/i,'').trim();
+
+  document.getElementById('m-admin-title').textContent = `결과 입력: ${m.label}`;
+  document.getElementById('m-admin-body').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">스코어 (한국 : 상대)</label>
+      <div class="score-row">
+        <input type="number" class="score-box" id="adm-hs" value="${res.hs !== undefined ? res.hs : ''}" min="0" max="20">
+        <span class="vs-sep">:</span>
+        <input type="number" class="score-box" id="adm-as" value="${res.as !== undefined ? res.as : ''}" min="0" max="20">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">🇰🇷 한국 득점 선수</label>
+      <div class="sugg-row" style="max-height:110px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px;">${KOR_PLAYERS.map(n=>`<span class="sugg" onclick="adminTagAdd('${n}')">${n}</span>`).join('')}</div>
+      <div class="tags-wrap" id="atw" onclick="adminTagFocus()">
+        ${_adminScorers.map(s=>`<span class="tag">${s}<span class="tag-x" onclick="adminTagRm('${s}')">×</span></span>`).join('')}
+        <input class="tag-inp" id="ati" placeholder="선수명 후 Enter" onkeydown="adminTagKey(event)">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">🆚 ${oppTeam} 득점 선수</label>
+      ${oppPlayers.length ? `<div class="sugg-row" style="max-height:110px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px;">${oppPlayers.map(n=>`<span class="sugg" onclick="adminOppTagAdd('${n}')">${n}</span>`).join('')}</div>` : ''}
+      <div class="tags-wrap" id="atow" onclick="adminOppTagFocus()">
+        ${_adminOppScorers.map(s=>`<span class="tag">${s}<span class="tag-x" onclick="adminOppTagRm('${s}')">×</span></span>`).join('')}
+        <input class="tag-inp" id="atoi" placeholder="선수명 후 Enter" onkeydown="adminOppTagKey(event)">
+      </div>
+    </div>
+    ${m.result ? `<button class="btn btn-gray btn-sm" onclick="clearMatchResult(${id})" style="margin-bottom:8px">결과 삭제</button>` : ''}
+  `;
+  showModal('m-admin');
+}
+
+function clearMatchResult(id) {
+  if (!confirm('결과를 삭제하시겠습니까?')) return;
+  const m = S.matches.find(x=>x.id===id);
+  if (m) { m.result = null; save(); closeModal('m-admin'); renderAdminPanel(); }
+}
+
+function openAdminTour(key) {
+  adminTarget = { type: 'tour', key };
+  const cur = S.tour[key];
+  const labels = { winner:'🌍 월드컵 우승국', topScorer:'👑 최다골 선수', totalGoals:'🎯 총 골 수' };
+  document.getElementById('m-admin-title').textContent = `결과 입력: ${labels[key]}`;
+  const isNum = key === 'totalGoals';
+  document.getElementById('m-admin-body').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">${labels[key]}</label>
+      <input type="${isNum?'number':'text'}" class="form-input" id="adm-tour-val"
+             value="${cur.result !== null && cur.result !== undefined ? cur.result : ''}"
+             placeholder="${isNum ? '골 수 입력 (예: 155)' : '입력 (예: 브라질)'}">
+    </div>
+    ${cur.result !== null && cur.result !== undefined ? `<button class="btn btn-gray btn-sm" onclick="clearTourResult('${key}')" style="margin-bottom:8px">결과 삭제</button>` : ''}
+  `;
+  showModal('m-admin');
+}
+
+function clearTourResult(key) {
+  if (!confirm('결과를 삭제하시겠습니까?')) return;
+  S.tour[key].result = null;
+  save(); closeModal('m-admin'); renderAdminPanel(); renderTour(); renderRank();
+}
+
+function saveAdminResult() {
+  if (!adminTarget) return;
+
+  if (adminTarget.type === 'match') {
+    const m = S.matches.find(x=>x.id===adminTarget.id);
+    if (!m) return;
+    const hs = document.getElementById('adm-hs').value;
+    const as = document.getElementById('adm-as').value;
+    if (hs==='' || as==='') return alert('스코어를 입력해주세요.');
+    m.result = { hs: parseInt(hs), as: parseInt(as), scorers: [..._adminScorers], oppScorers: [..._adminOppScorers] };
+  } else {
+    const key = adminTarget.key;
+    const val = document.getElementById('adm-tour-val').value.trim();
+    if (!val) return alert('값을 입력해주세요.');
+    S.tour[key].result = key === 'totalGoals' ? parseInt(val) : val;
+  }
+
+  save();
+  closeModal('m-admin');
+  renderAdminPanel();
+  renderRank();
+  renderTour();
+  renderMatch();
+  toast('결과 저장 완료! ✅');
+}
+
+// ══════════════════════════════════════
+//  SETTINGS TAB
+// ══════════════════════════════════════
+function renderSet() {
+  // Players
+  document.getElementById('player-settings').innerHTML = S.players.map((p,i)=>
+    `<div class="setting-row"><span style="font-size:0.8rem;color:var(--text-light);width:20px">${i+1}</span><input type="text" class="form-input" id="ps-${i}" value="${p}"></div>`
+  ).join('');
+
+  // Prizes
+  const pl = [
+    {k:'exactScore', l:'⚽ 스코어 정확히 맞추기'},
+    {k:'scorer',     l:'🎯 골 선수 맞추기 (1명당)'},
+    {k:'winner',     l:'🌍 우승국 맞추기'},
+    {k:'topScorer',  l:'👑 최다골 선수 맞추기'},
+    {k:'totalGoals', l:'🔢 총 골 수 (가장 가까운 사람)'},
+  ];
+  document.getElementById('prize-settings').innerHTML = pl.map(x=>`
+    <div class="form-group">
+      <label class="form-label">${x.l}</label>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="number" class="form-input" id="prz-${x.k}" value="${S.prizes[x.k]}">
+        <span style="flex-shrink:0;font-size:0.85rem">원</span>
+      </div>
+    </div>`).join('');
+
+  // Matches
+  document.getElementById('match-settings').innerHTML = S.matches.map(m=>`
+    <div class="match-setting-item">
+      <input type="text" class="form-input" id="ms-label-${m.id}" value="${m.label}" placeholder="예: 한국 vs 멕시코">
+      <div style="display:flex;gap:6px;margin-top:6px">
+        <input type="date" class="form-input" id="ms-date-${m.id}" value="${m.date}" style="flex:1">
+        <input type="time" class="form-input" id="ms-time-${m.id}" value="${m.time||''}" style="flex:0 0 100px" title="한국시간(KST)">
+      </div>
+      <input type="text" class="form-input" id="ms-venue-${m.id}" value="${m.venue||''}" placeholder="구장 (예: 에스타디오 아크론)" style="margin-top:6px">
+      <div style="display:flex;gap:6px;margin-top:6px">
+        <select class="form-input" id="ms-phase-${m.id}" style="flex:1">
+          ${['조별리그','16강','8강','4강','결승'].map(ph=>`<option ${m.phase===ph?'selected':''}>${ph}</option>`).join('')}
+        </select>
+      </div>
+      <div class="match-act-row" style="margin-top:6px">
+        <button class="btn btn-red btn-sm" onclick="saveMatchSettings(${m.id})">저장</button>
+        <button class="btn btn-gray btn-sm" onclick="delMatch(${m.id})">삭제</button>
+        ${m.result ? `<span style="font-size:0.75rem;color:var(--success);margin-left:4px">✅ 결과있음</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function savePlayers() {
+  S.players = S.players.map((_,i) => {
+    const inp = document.getElementById(`ps-${i}`);
+    return inp ? inp.value.trim() || S.players[i] : S.players[i];
+  });
+  save();
+  if (!S.players.includes(curPlayer)) curPlayer = S.players[0];
+  toast('이름 저장 완료! ✅');
+}
+
+function savePrizes() {
+  ['exactScore','scorer','winner','topScorer','totalGoals'].forEach(k => {
+    const inp = document.getElementById(`prz-${k}`);
+    if (inp && inp.value) S.prizes[k] = parseInt(inp.value) || S.prizes[k];
+  });
+  save();
+  renderRank();
+  toast('상금 저장 완료! ✅');
+}
+
+function saveMatchSettings(id) {
+  const m = S.matches.find(x=>x.id===id);
+  if (!m) return;
+  const l  = document.getElementById(`ms-label-${id}`);
+  const d  = document.getElementById(`ms-date-${id}`);
+  const t  = document.getElementById(`ms-time-${id}`);
+  const v  = document.getElementById(`ms-venue-${id}`);
+  const ph = document.getElementById(`ms-phase-${id}`);
+  if (l)  m.label = l.value.trim() || m.label;
+  if (d)  m.date  = d.value;
+  if (t)  m.time  = t.value;
+  if (v)  m.venue = v.value.trim();
+  if (ph) m.phase = ph.value;
+  save();
+  toast('저장 완료! ✅');
+}
+
+function delMatch(id) {
+  if (!confirm('경기를 삭제하면 관련 예측도 모두 삭제됩니다.')) return;
+  S.matches = S.matches.filter(m=>m.id!==id);
+  save();
+  renderSet();
+}
+
+function addMatch() {
+  S.matches.push({
+    id: S.nextId++,
+    label: '한국 vs 상대팀',
+    date: new Date().toISOString().split('T')[0],
+    time: '',
+    venue: '',
+    phase: '조별리그',
+    preds: {},
+    result: null
+  });
+  save();
+  renderSet();
+}
+
+function changePin() {
+  const v = document.getElementById('new-pin').value.trim();
+  if (!v) return alert('PIN을 입력해주세요.');
+  S.pin = v;
+  save();
+  document.getElementById('new-pin').value = '';
+  toast('PIN 변경 완료!');
+}
+
+function resetAll() {
+  if (!confirm('⚠️ 모든 데이터가 삭제됩니다. 계속하시겠습니까?')) return;
+  localStorage.removeItem('wc2026');
+  S = JSON.parse(JSON.stringify(DEFAULTS));
+  save();
+  location.reload();
+}
+
+// ══════════════════════════════════════
+//  MODAL UTILS
+// ══════════════════════════════════════
+function showModal(id) {
+  document.getElementById(id).classList.add('show');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+function bgClose(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+// ══════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════
+function fmtDate(s) {
+  if (!s) return '';
+  const d = new Date(s + 'T12:00:00');
+  const days = ['일','월','화','수','목','금','토'];
+  return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} (${days[d.getDay()]})`;
+}
+
+let toastTimer;
+function toast(msg) {
+  let el = document.getElementById('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;padding:10px 20px;border-radius:20px;font-size:0.85rem;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;white-space:nowrap;';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.opacity = '0', 1800);
+}
+
+// ══════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════
+(async () => {
+  await load();
+  renderRank();
+  renderGroups();
+})();
+</script>
+</body>
+</html>
