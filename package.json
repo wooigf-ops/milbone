@@ -1,0 +1,12 @@
+{
+  "name": "worldcup-betting-server",
+  "version": "1.0.0",
+  "description": "2026 월드컵 계모임 배팅게임 서버",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
